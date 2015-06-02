@@ -1,20 +1,21 @@
 package me.wiedzmin137.spelldown.object.item;
 
 import me.wiedzmin137.spelldown.Main;
+import me.wiedzmin137.spelldown.Storage.EModel;
 import me.wiedzmin137.spelldown.Utils;
-import me.wiedzmin137.spelldown.object.Ship;
-import me.wiedzmin137.spelldown.object.Shot;
 import me.wiedzmin137.spelldown.object.Updateable;
 import me.wiedzmin137.spelldown.object.Weapon;
+import me.wiedzmin137.spelldown.object.moveable.Ship;
 
-import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector3;
 
 public class Upgrade extends ModelInstance implements Updateable {
 
-	public Upgrade(final Model model, final Matrix4 pos) {
-		super(model, pos);
+	public Upgrade(final EModel model, final Vector3 position) {
+		super(model.model);
+		
+		transform.setTranslation(position);
 	}
 
 	@Override
@@ -26,12 +27,13 @@ public class Upgrade extends ModelInstance implements Updateable {
 			return;
 		} 
 		
-		if (transform.getValues()[14] >= 15) { //TODO change value per resolution or check it out
+		transform.getTranslation(Utils.checker);
+		if (Utils.checker.y >= 20) {
 			Main.getInstance().getStorage().remInstance(this);
 			return;
 		}
 		
-		transform.trn(0, 0, (Shot.SHOT_VELOCITY / 2) * delta); //TODO change it because shot should be more random
+		transform.trn(0, 0, (Shot.SHOT_VELOCITY / 2) * delta);
 	}
 
 }

@@ -2,12 +2,11 @@ package me.wiedzmin137.spelldown.object.item;
 
 import me.wiedzmin137.spelldown.Main;
 import me.wiedzmin137.spelldown.Utils;
-import me.wiedzmin137.spelldown.object.Ship;
 import me.wiedzmin137.spelldown.object.Updateable;
+import me.wiedzmin137.spelldown.object.moveable.Ship;
 
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 public class Eat extends ModelInstance implements Updateable {
@@ -16,11 +15,10 @@ public class Eat extends ModelInstance implements Updateable {
 	private int jumps = 0;
 	private Vector3 dir;
 	
-	public final static Vector3 tmpV = new Vector3();
-	
-	public Eat(final Model model, final Matrix4 transform, final Vector3 dir, final int value) {
-		super(model, transform);
+	public Eat(final Model model, final Vector3 position, final Vector3 dir, final int value) {
+		super(model);
 		
+		transform.setTranslation(position);
 		this.value = value;
 		this.dir = dir.scl(0.5F, 0.5F, 0.5F);
 	}
@@ -34,17 +32,24 @@ public class Eat extends ModelInstance implements Updateable {
 			return;
 		}
 		
-		if (transform.getValues()[14] > 1) {
+		transform.getTranslation(Utils.checker);
+		if (Utils.checker.z > 15) {
 			if (jumps == 3) {
 				Main.getInstance().getStorage().remInstance(this);
 			} else {
+				transform.getTranslation(Utils.checker);
+				transform.setTranslation(Utils.checker.x, Utils.checker.y, 15);
 				dir.scl(0.25F, 0, -0.5F);
 				jumps++;
 			}
 		}
 		
-		transform.getTranslation(tmpV);
-		if (tmpV.x > 9 || tmpV.x < -9) {
+		if (Utils.checker.x > 12) {
+			transform.setTranslation(12, Utils.checker.y, Utils.checker.z);
+			dir.scl(-0.5F, 0, 1);
+		}
+		if (Utils.checker.x < -12) {
+			transform.setTranslation(-12, Utils.checker.y, Utils.checker.z);
 			dir.scl(-0.5F, 0, 1);
 		}
 		
